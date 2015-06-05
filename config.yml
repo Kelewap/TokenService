@@ -1,0 +1,12 @@
+server:
+  type: simple
+  applicationContextPath: /
+  adminContextPath: /admin
+  connector:
+    type: http
+    port: 8066
+
+oauth2Configuration:
+  appName: CloudSyncIosrProject
+  appKey: nlsu5a4n7jcr3il
+  appKeySecret: c1tufi0cm9vjoh0
