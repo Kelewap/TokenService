@@ -1,14 +1,13 @@
 package iosr.tokenservice.access;
 
 import iosr.tokenservice.config.Oauth2Configuration;
-import org.json.JSONObject;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-public class DropboxTokenProvider extends AbstractTokenProvider {
+public class DropboxTokenProvider extends AbstractPlainRESTTokenProvider {
 
     private static final String GRANT_TYPE = "authorization_code";
 
@@ -21,12 +20,12 @@ public class DropboxTokenProvider extends AbstractTokenProvider {
     }
 
     @Override
-    protected JSONObject requestForAccessToken(String code) {
+    protected String obtainAccessToken(String code) throws AuthorizationException {
         WebTarget webTarget = queryObtainTokenResource(code);
         Response response = webTarget.request(MediaType.APPLICATION_JSON).post(null);
         String rawResponse = response.readEntity(String.class);
 
-        return new JSONObject(rawResponse);
+        return getTokenFromResponse(rawResponse);
     }
 
     private WebTarget queryObtainTokenResource(String code) {

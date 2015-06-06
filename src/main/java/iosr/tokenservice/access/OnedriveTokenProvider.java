@@ -8,7 +8,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-public class OnedriveTokenProvider extends AbstractTokenProvider {
+public class OnedriveTokenProvider extends AbstractPlainRESTTokenProvider {
 
     private static final String GRANT_TYPE = "authorization_code";
     private static final String REDIRECT_URI = "https://login.live.com/oauth20_desktop.srf";
@@ -22,12 +22,12 @@ public class OnedriveTokenProvider extends AbstractTokenProvider {
     }
 
     @Override
-    protected JSONObject requestForAccessToken(String code) {
+    protected String obtainAccessToken(String code) throws AuthorizationException {
         WebTarget webTarget = queryObtainTokenResource(code);
         Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
         String rawResponse = response.readEntity(String.class);
 
-        return new JSONObject(rawResponse);
+        return getTokenFromResponse(rawResponse);
     }
 
     private WebTarget queryObtainTokenResource(String code) {

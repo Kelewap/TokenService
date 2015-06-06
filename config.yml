@@ -15,3 +15,8 @@ onedriveConfig:
   appName: burak
   appKey: 000000004015302A
   appKeySecret: 3nbUeQnDqrFLSZwPKpjLBrYubFelq7TL
+
+googleConfig:
+  appName: CloudSyncIosrProject
+  appKey: 2828043487-aepcph91ibr6vurdij6qo2nckv2dmgt7.apps.googleusercontent.com
+  appKeySecret: s4CWlPWyq4n0-rMmRosqnUxt
