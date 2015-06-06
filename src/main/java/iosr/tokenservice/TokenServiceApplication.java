@@ -33,7 +33,7 @@ public class TokenServiceApplication extends Application<TokenServiceConfigurati
     public void run(TokenServiceConfiguration tokenServiceConfiguration, Environment environment) throws AuthorizationException {
         DropboxTokenProvider dropboxTokenProvider = new DropboxTokenProvider(ClientBuilder.newClient(), tokenServiceConfiguration.getDropboxConfig());
         OnedriveTokenProvider onedriveTokenProvider = new OnedriveTokenProvider(ClientBuilder.newClient(), tokenServiceConfiguration.getOnedriveConfig());
-        GoogleTokenProvider googleTokenProvider = new GoogleTokenProvider(tokenServiceConfiguration.getGoogleConfig());
+        GoogleTokenProvider googleTokenProvider = GoogleTokenProvider.createWithDefaultFlow(tokenServiceConfiguration.getGoogleConfig());
 
         googleTokenProvider.redeemCode(GOOGLE_CODE);
         onedriveTokenProvider.redeemCode(ONEDRIVE_CODE);

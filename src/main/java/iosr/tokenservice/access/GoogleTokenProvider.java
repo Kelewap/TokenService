@@ -10,36 +10,34 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.DriveScopes;
 import iosr.tokenservice.config.Oauth2Configuration;
-import org.json.JSONObject;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.Collections;
 
 public class GoogleTokenProvider extends AbstractTokenProvider {
 
     private static final String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
-    private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-    private final Oauth2Configuration oauth2Configuration;
 
-    public GoogleTokenProvider(Oauth2Configuration oauth2Configuration) {
-        this.oauth2Configuration = oauth2Configuration;
+    private final GoogleAuthorizationCodeFlow flow;
+    private Credential credential;
+
+    private GoogleTokenProvider(GoogleAuthorizationCodeFlow flow) {
+        this.flow = flow;
+    }
+
+    public static GoogleTokenProvider createWithDefaultFlow(Oauth2Configuration oauth2Configuration) {
+        return new GoogleTokenProvider(getFlow(oauth2Configuration));
     }
 
     @Override
     protected String obtainAccessToken(String code) throws AuthorizationException {
         try {
-            //TODO: extract flow creation to builder
-            GoogleAuthorizationCodeFlow flow = getFlow();
             GoogleTokenResponse response = flow
                     .newTokenRequest(code)
                     .setRedirectUri(REDIRECT_URI)
                     .execute();
-            Credential credential = flow.createAndStoreCredential(response, null);
+
+            this.credential = flow.createAndStoreCredential(response, null);
 
             return credential.getAccessToken();
         } catch (IOException e) {
@@ -49,11 +47,13 @@ public class GoogleTokenProvider extends AbstractTokenProvider {
 
     @Override
     protected String getRefreshedToken() {
-        //FIXME
-        return "bubu";
+        return credential.getRefreshToken();
     }
 
-    private GoogleAuthorizationCodeFlow getFlow() throws IOException {
+    private static GoogleAuthorizationCodeFlow getFlow(Oauth2Configuration oauth2Configuration) {
+        final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+        final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+
         GoogleClientSecrets.Details details = new GoogleClientSecrets.Details();
         details.setClientId(oauth2Configuration.getAppKey());
         details.setClientSecret(oauth2Configuration.getAppKeySecret());
