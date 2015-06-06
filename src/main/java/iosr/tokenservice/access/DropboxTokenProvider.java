@@ -28,6 +28,11 @@ public class DropboxTokenProvider extends AbstractPlainRESTTokenProvider {
         return getTokenFromResponse(rawResponse);
     }
 
+    @Override
+    protected String getRefreshedToken() {
+        return this.getToken().getToken();
+    }
+
     private WebTarget queryObtainTokenResource(String code) {
         return client.target("https://api.dropbox.com/1/oauth2/token")
                 .queryParam("client_id", oauth2Configuration.getAppKey())

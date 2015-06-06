@@ -47,6 +47,12 @@ public class GoogleTokenProvider extends AbstractTokenProvider {
         }
     }
 
+    @Override
+    protected String getRefreshedToken() {
+        //FIXME
+        return "bubu";
+    }
+
     private GoogleAuthorizationCodeFlow getFlow() throws IOException {
         GoogleClientSecrets.Details details = new GoogleClientSecrets.Details();
         details.setClientId(oauth2Configuration.getAppKey());
