@@ -19,7 +19,6 @@ public class GoogleTokenProvider extends AbstractTokenProvider {
     private static final String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
 
     private final GoogleAuthorizationCodeFlow flow;
-    private Credential credential;
 
     private GoogleTokenProvider(GoogleAuthorizationCodeFlow flow) {
         this.flow = flow;
@@ -37,7 +36,7 @@ public class GoogleTokenProvider extends AbstractTokenProvider {
                     .setRedirectUri(REDIRECT_URI)
                     .execute();
 
-            this.credential = flow.createAndStoreCredential(response, null);
+            Credential credential = flow.createAndStoreCredential(response, null);
 
             return credential.getAccessToken();
         } catch (IOException e) {
@@ -47,7 +46,7 @@ public class GoogleTokenProvider extends AbstractTokenProvider {
 
     @Override
     protected String getRefreshedToken() {
-        return credential.getRefreshToken();
+        return getToken().getToken();
     }
 
     private static GoogleAuthorizationCodeFlow getFlow(Oauth2Configuration oauth2Configuration) {

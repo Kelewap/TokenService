@@ -8,6 +8,7 @@ public class TokenServiceConfiguration extends Configuration {
     private Oauth2Configuration dropboxConfig;
     private Oauth2Configuration onedriveConfig;
     private Oauth2Configuration googleConfig;
+    private String refreshSchedule;
 
     @JsonProperty
     public String getDropboxCode() {
@@ -47,5 +48,15 @@ public class TokenServiceConfiguration extends Configuration {
     @JsonProperty
     public void setGoogleConfig(Oauth2Configuration googleConfig) {
         this.googleConfig = googleConfig;
+    }
+
+    @JsonProperty
+    public String getRefreshSchedule() {
+        return refreshSchedule;
+    }
+
+    @JsonProperty
+    public void setRefreshSchedule(String refreshSchedule) {
+        this.refreshSchedule = refreshSchedule;
     }
 }

@@ -4,7 +4,9 @@ import iosr.tokenservice.config.Oauth2Configuration;
 import org.json.JSONObject;
 
 import javax.ws.rs.client.Client;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -35,21 +37,19 @@ public class OnedriveTokenProvider extends AbstractPlainRESTTokenProvider {
 
     @Override
     protected String getRefreshedToken() throws AuthorizationException {
-        WebTarget webTarget = queryRefreshToken(refreshToken);
-        Response response = webTarget.request(MediaType.APPLICATION_JSON).post(null);
+        WebTarget webTarget = client.target("https://login.live.com/oauth20_token.srf");
+        Form bodyForm = new Form()
+                .param("client_id", oauth2Configuration.getAppKey())
+                .param("client_secret", oauth2Configuration.getAppKeySecret())
+                .param("redirect_uri", REDIRECT_URI)
+                .param("grant_type", "refresh_token")
+                .param("refresh_token", refreshToken);
+        Response response = webTarget.request(MediaType.APPLICATION_JSON).post(Entity.form(bodyForm));
         String rawResponse = response.readEntity(String.class);
 
         this.refreshToken = getRefreshTokenFromResponse(rawResponse);
 
         return getTokenFromResponse(rawResponse);
-    }
-
-    private WebTarget queryRefreshToken(String refreshToken) {
-        return client.target("https://login.live.com/oauth20_token.srf")
-                .queryParam("client_id", oauth2Configuration.getAppKey())
-                .queryParam("client_secret", oauth2Configuration.getAppKeySecret())
-                .queryParam("redirect_uri", REDIRECT_URI)
-                .queryParam("refresh_token", refreshToken);
     }
 
     private String getRefreshTokenFromResponse(String rawResponse) throws AuthorizationException {
