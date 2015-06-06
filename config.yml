@@ -6,7 +6,12 @@ server:
     type: http
     port: 8066
 
-oauth2Configuration:
+dropboxConfig:
   appName: CloudSyncIosrProject
   appKey: nlsu5a4n7jcr3il
   appKeySecret: c1tufi0cm9vjoh0
+
+onedriveConfig:
+  appName: burak
+  appKey: 000000004015302A
+  appKeySecret: 3nbUeQnDqrFLSZwPKpjLBrYubFelq7TL

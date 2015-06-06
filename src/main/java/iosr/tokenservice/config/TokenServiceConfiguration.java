@@ -5,7 +5,8 @@ import io.dropwizard.Configuration;
 
 public class TokenServiceConfiguration extends Configuration {
     private String dropboxCode;
-    private Oauth2Configuration oauth2Configuration;
+    private Oauth2Configuration dropboxConfig;
+    private Oauth2Configuration onedriveConfig;
 
     @JsonProperty
     public String getDropboxCode() {
@@ -18,12 +19,22 @@ public class TokenServiceConfiguration extends Configuration {
     }
 
     @JsonProperty
-    public Oauth2Configuration getOauth2Configuration() {
-        return oauth2Configuration;
+    public Oauth2Configuration getDropboxConfig() {
+        return dropboxConfig;
     }
 
     @JsonProperty
-    public void setOauth2Configuration(Oauth2Configuration oauth2Configuration) {
-        this.oauth2Configuration = oauth2Configuration;
+    public void setDropboxConfig(Oauth2Configuration dropboxConfig) {
+        this.dropboxConfig = dropboxConfig;
+    }
+
+    @JsonProperty
+    public Oauth2Configuration getOnedriveConfig() {
+        return onedriveConfig;
+    }
+
+    @JsonProperty
+    public void setOnedriveConfig(Oauth2Configuration onedriveConfig) {
+        this.onedriveConfig = onedriveConfig;
     }
 }
